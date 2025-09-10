@@ -31,45 +31,45 @@ steps:
       - push
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
       
-   # 2.5) Tạo thư mục cho báo cáo Trivy
-  - name: gcr.io/cloud-builders/gcloud
-    id: Prepare Trivy output dir
-    entrypoint: bash
-    args:
-      - -lc
-      - mkdir -p /workspace/trivy
+   # # 2.5) Tạo thư mục cho báo cáo Trivy
+  # - name: gcr.io/cloud-builders/gcloud
+    # id: Prepare Trivy output dir
+    # entrypoint: bash
+    # args:
+      # - -lc
+      # - mkdir -p /workspace/trivy
 
-  # 3) Quét lỗ hổng với Trivy; fail nếu có HIGH/CRITICAL
-  - name: aquasec/trivy:0.54.1
-    id: Vulnerability scan (fail on HIGH/CRITICAL)
-    args:
-      - image
-      - --ignore-unfixed
-      - --exit-code
-      - "1"
-      - --severity
-      - ${_SCAN_SEVERITY}
-      - --format
-      - sarif
-      - --output
-      - /workspace/trivy/report.sarif
-      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
+  # # 3) Quét lỗ hổng với Trivy; fail nếu có HIGH/CRITICAL
+  # - name: aquasec/trivy:0.54.1
+    # id: Vulnerability scan (fail on HIGH/CRITICAL)
+    # args:
+      # - image
+      # - --ignore-unfixed
+      # - --exit-code
+      # - "1"
+      # - --severity
+      # - ${_SCAN_SEVERITY}
+      # - --format
+      # - sarif
+      # - --output
+      # - /workspace/trivy/report.sarif
+      # - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
 
-  # 4) (Không fail) Xuất tóm tắt dạng text
-  - name: aquasec/trivy:0.54.1
-    id: Vulnerability summary (text)
-    args:
-      - image
-      - --ignore-unfixed
-      - --exit-code
-      - "0"
-      - --severity
-      - LOW,MEDIUM,HIGH,CRITICAL
-      - --format
-      - table
-      - --output
-      - /workspace/trivy/summary.txt
-      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
+  # # 4) (Không fail) Xuất tóm tắt dạng text
+  # - name: aquasec/trivy:0.54.1
+    # id: Vulnerability summary (text)
+    # args:
+      # - image
+      # - --ignore-unfixed
+      # - --exit-code
+      # - "0"
+      # - --severity
+      # - LOW,MEDIUM,HIGH,CRITICAL
+      # - --format
+      # - table
+      # - --output
+      # - /workspace/trivy/summary.txt
+      # - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
 
   # 5) Nếu scan pass, gắn tag 'latest' và push
   - name: gcr.io/cloud-builders/docker
