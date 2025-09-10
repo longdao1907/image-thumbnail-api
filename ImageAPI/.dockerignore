@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/*.user
+.vscode/
+.vs/
+.git
+.gitignore
+.DS_Store
+Thumbs.db
+node_modules/
+*.pfx
+*.key
+*.cer
+*.pem
+.env
