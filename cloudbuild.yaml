@@ -23,6 +23,7 @@ steps:
       - -t
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
       - ImageAPI
+      - .
 
   # 2) Push image tag theo commit SHA lên Artifact Registry
   - name: gcr.io/cloud-builders/docker
