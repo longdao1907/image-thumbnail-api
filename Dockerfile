@@ -22,13 +22,22 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Lấy binary cloud-sql-proxy từ image chính thức
+FROM gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4 AS cloudsql
+
+
 # Final image
 FROM base AS final
 WORKDIR /app
 # Copy app published
 COPY --from=publish /app/publish .
+
+# Copy cloud-sql-proxy binary
+COPY --from=cloudsql /cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+
 # Copy entrypoint to set ASPNETCORE_URLS with $PORT
 COPY entrypoint.sh ./entrypoint.sh
+
 # set execution permission to run script
 RUN chmod +x /app/entrypoint.sh
 # Execute with non-root user 
