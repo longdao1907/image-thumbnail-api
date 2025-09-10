@@ -34,3 +34,8 @@ trap term_handler TERM INT
 # Start ứng dụng .NET (kết nối DB qua 127.0.0.1:${DB_PROXY_PORT}, sslmode=disable)
 dotnet ImageAPI.dll &
 APP_PID=$!
+
+# Chờ app kết thúc, sau đó dừng proxy
+wait "${APP_PID}" || true
+kill -TERM "${PROXY_PID}" 2>/dev/null || true
+wait "${PROXY_PID}" 2>/dev/null || true
