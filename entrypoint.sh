@@ -5,6 +5,7 @@ set -e
 PORT="${PORT:-8080}"
 # Lưu ý: Nếu không cấu hình SSL cho Kestrel, hãy dùng http
 export ASPNETCORE_URLS="http://0.0.0.0:${PORT}"
+export ASPNETCORE_ENVIRONMENT="${ASPNETCORE_ENVIRONMENT:-Development}"
 
 # --- Cấu hình Cloud SQL Proxy ---
 # SỬA LỖI 1: Sửa lại cú pháp gán biến và dùng ':-' cho giá trị mặc định.
