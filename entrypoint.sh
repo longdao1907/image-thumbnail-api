@@ -14,11 +14,7 @@ DB_PROXY_PORT="${DB_PROXY_PORT:-5432}"
 PROXY_EXTRA_ARGS="${PROXY_EXTRA_ARGS:-}"
 
 echo "[entrypoint] Starting Cloud SQL Proxy for ${CLOUDSQL_INSTANCE} on 127.0.0.1:${DB_PROXY_PORT}"
-/usr/local/bin/cloud-sql-proxy \
-  --structured-logs \
-  --port="${DB_PROXY_PORT}" \
-  "${PROXY_EXTRA_ARGS}" \
-  "${CLOUDSQL_INSTANCE}" &
+/usr/local/bin/cloud-sql-proxy --structured-logs --port="${DB_PROXY_PORT}" "${PROXY_EXTRA_ARGS}" "${CLOUDSQL_INSTANCE}" &
 PROXY_PID=$!
 
 # Bẫy tín hiệu để dừng gọn gàng
@@ -30,6 +26,7 @@ term_handler() {
 }
 
 trap term_handler TERM INT
+
 
 # Start ứng dụng .NET (kết nối DB qua 127.0.0.1:${DB_PROXY_PORT}, sslmode=disable)
 dotnet ImageAPI.dll &
