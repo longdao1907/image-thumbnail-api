@@ -5256,11 +5256,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\letin\\OneDrive\\Documents\\ImageThumbnail\\ImgThumbnailApp\\ImageAPI\\ImageAPI.csproj",
+      "projectUniqueName": "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj",
       "projectName": "ImageAPI",
-      "projectPath": "C:\\Users\\letin\\OneDrive\\Documents\\ImageThumbnail\\ImgThumbnailApp\\ImageAPI\\ImageAPI.csproj",
+      "projectPath": "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj",
       "packagesPath": "C:\\Users\\letin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\letin\\OneDrive\\Documents\\ImageThumbnail\\ImgThumbnailApp\\ImageAPI\\obj\\",
+      "outputPath": "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
