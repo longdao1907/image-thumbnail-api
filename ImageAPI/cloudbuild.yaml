@@ -21,7 +21,7 @@ steps:
       - -f
       - ImageAPI/Dockerfile
       - -t
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:605848a
       - ImageAPI
 
   # 2) Push image tag theo commit SHA lên Artifact Registry
@@ -29,7 +29,7 @@ steps:
     id: Push SHA tag
     args:
       - push
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:605848a
   # 3) Quét lỗ hổng với Trivy; fail nếu có HIGH/CRITICAL
   - name: aquasec/trivy:0.54.1
     id: Vulnerability scan (fail on HIGH/CRITICAL)
@@ -44,7 +44,7 @@ steps:
       - sarif
       - --output
       - /workspace/trivy/report.sarif
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:605848a
   # 4) (Không fail) Xuất tóm tắt dạng text
   - name: aquasec/trivy:0.54.1
     id: Vulnerability summary (text)
@@ -59,13 +59,14 @@ steps:
       - table
       - --output
       - /workspace/trivy/summary.txt
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:605848a
 
   # 5) Nếu scan pass, gắn tag 'latest' và push
   - name: gcr.io/cloud-builders/docker
     id: Tag latest
     args:
       - tag
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:605848a
       - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
 
   - name: asia.gcr.io/cloud-builders/docker
