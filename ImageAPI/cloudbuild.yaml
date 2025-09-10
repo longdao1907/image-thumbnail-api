@@ -8,7 +8,7 @@ substitutions:
   _REPO: app                            # Tên repository trong Artifact Registry
   _IMAGE: image-thumbnail-api           # Tên image
   _SCAN_SEVERITY: HIGH,CRITICAL         # Fail build nếu có các mức này
-  _ARTIFACTS_BUCKET: "$PROJECT_ID-cloudbuild-artifacts"  # GCS bucket lưu báo cáo scan
+  _ARTIFACTS_BUCKET: "$PROJECT_ID-cloudbuild-artifact"  # GCS bucket lưu báo cáo scan
 
 steps:
   # 1) Build image từ Dockerfile trong thư mục ImageAPI (dùng BuildKit cho nhanh)
@@ -78,7 +78,7 @@ steps:
 
 artifacts:
   objects:
-    location: gs://durable-sky-471008-q2-cloudbuild-artifact/image-thumbnail-api/
+    location: gs://${PROJECT_ID}-cloudbuild-artifact/image-thumbnail-api/
     paths:
       - trivy/report.sarif
       - trivy/summary.txt
