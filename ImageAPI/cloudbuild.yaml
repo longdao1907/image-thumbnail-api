@@ -21,7 +21,7 @@ steps:
       - -f
       - ImageAPI/Dockerfile
       - -t
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:image-thumbnail-api
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
       - ImageAPI
 
   # 2) Push image tag theo commit SHA lên Artifact Registry
@@ -29,8 +29,7 @@ steps:
     id: Push SHA tag
     args:
       - push
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:image-thumbnail-api
-
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
   # 3) Quét lỗ hổng với Trivy; fail nếu có HIGH/CRITICAL
   - name: aquasec/trivy:0.54.1
     id: Vulnerability scan (fail on HIGH/CRITICAL)
@@ -45,8 +44,7 @@ steps:
       - sarif
       - --output
       - /workspace/trivy/report.sarif
-      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:image-thumbnail-api
-
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
   # 4) (Không fail) Xuất tóm tắt dạng text
   - name: aquasec/trivy:0.54.1
     id: Vulnerability summary (text)
