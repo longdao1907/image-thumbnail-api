@@ -10,7 +10,7 @@ WORKDIR /src
 
 # Copy csproj & restore (tối ưu cache)
 COPY ["ImageAPI.csproj", "ImageAPI/"]
-RUN dotnet restore "ImageAPI/ImageAPI.csproj"
+RUN dotnet restore "ImageAPI.csproj"
 
 # Copy source còn lại và build
 COPY . .
