@@ -85,9 +85,9 @@ steps:
       - push
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:latest
 
-artifacts:
-  objects:
-    location: gs://${_ARTIFACTS_BUCKET}/image-thumbnail-api/${SHORT_SHA}
-    paths:
-      - trivy/report.sarif
-      - trivy/summary.txt
+# artifacts:
+  # objects:
+    # location: gs://${_ARTIFACTS_BUCKET}/image-thumbnail-api/${SHORT_SHA}
+    # paths:
+      # - trivy/report.sarif
+      # - trivy/summary.txt
