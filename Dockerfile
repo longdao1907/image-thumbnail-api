@@ -13,8 +13,8 @@ COPY ["ImageAPI/ImageAPI.csproj", "ImageAPI/"]
 RUN dotnet restore "ImageAPI/ImageAPI.csproj"
 
 # Copy source còn lại và build
-COPY ImageAPI/ ImageAPI/
 WORKDIR "/src/ImageAPI"
+COPY ImageAPI/ .
 RUN dotnet build "ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish
@@ -28,7 +28,7 @@ WORKDIR /app
 # Copy app published
 COPY --from=publish /app/publish .
 # Copy entrypoint to set ASPNETCORE_URLS with $PORT
-COPY ImageAPI/entrypoint.sh ./entrypoint.sh
+COPY entrypoint.sh ./entrypoint.sh
 # set execution permission to run script
 RUN chmod +x /app/entrypoint.sh
 # Execute with non-root user 
