@@ -5,7 +5,7 @@ export ASPNETCORE_URLS="https://0.0.0.0:${PORT}"
 
 # Tham số Cloud SQL Proxy
 # BẮT BUỘC: tên kết nối instance dạng PROJECT:REGION:INSTANCE
-: "${CLOUDSQL_INSTANCE:?durable-sky-471008-q2:us-central1:my-first-postgresql}"
+CLOUDSQL_INSTANCE: "${CLOUDSQL_INSTANCE:?durable-sky-471008-q2:us-central1:my-first-postgresql}"
 
 # Cổng proxy local cho Postgres
 DB_PROXY_PORT="${DB_PROXY_PORT:-5432}"
