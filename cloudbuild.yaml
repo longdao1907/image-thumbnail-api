@@ -31,6 +31,13 @@ steps:
       - push
       - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${SHORT_SHA}
       
+   # 2.5) Tạo thư mục cho báo cáo Trivy
+  - name: gcr.io/cloud-builders/gcloud
+    id: Prepare Trivy output dir
+    entrypoint: bash
+    args:
+      - -lc
+      - mkdir -p /workspace/trivy
 
   # 3) Quét lỗ hổng với Trivy; fail nếu có HIGH/CRITICAL
   - name: aquasec/trivy:0.54.1
