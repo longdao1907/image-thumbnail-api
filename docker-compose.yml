@@ -1,0 +1,15 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ImageAPI/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    image: image-thumbnail-api:local
+    container_name: image-thumbnail-api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Tuỳ chọn: override PORT mà entrypoint.sh dùng (mặc định 8080)
+      - PORT=8080

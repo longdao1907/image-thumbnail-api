@@ -9,11 +9,11 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy csproj & restore (tối ưu cache)
-COPY ["ImageAPI.csproj", "ImageAPI/"]
+COPY ["ImageAPI/ImageAPI.csproj", "ImageAPI/"]
 RUN dotnet restore "ImageAPI/ImageAPI.csproj"
 
 # Copy source còn lại và build
-COPY . ImageAPI/
+COPY ImageAPI/ ImageAPI/
 WORKDIR "/src/ImageAPI"
 RUN dotnet build "ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -28,7 +28,7 @@ WORKDIR /app
 # Copy app published
 COPY --from=publish /app/publish .
 # Copy entrypoint to set ASPNETCORE_URLS with $PORT
-COPY entrypoint.sh ./entrypoint.sh
+COPY ImageAPI/entrypoint.sh ./entrypoint.sh
 # set execution permission to run script
 RUN chmod +x /app/entrypoint.sh
 # Execute with non-root user 
