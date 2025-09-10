@@ -15,12 +15,12 @@ RUN dotnet restore "ImageAPI/ImageAPI.csproj"
 # Copy source còn lại và build
 COPY . .
 WORKDIR "/src/ImageAPI"
-RUN dotnet build "ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "ImageAPI/ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ImageAPI/ImageAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final image
 FROM base AS final
