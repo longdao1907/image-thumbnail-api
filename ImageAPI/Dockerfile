@@ -9,8 +9,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy csproj & restore (tối ưu cache)
-COPY ["ImageAPI.csproj", "ImageAPI/"]
-RUN dotnet restore "ImageAPI.csproj"
+COPY ["ImageAPI/ImageAPI.csproj", "ImageAPI/"]
+RUN dotnet restore "ImageAPI/ImageAPI.csproj"
 
 # Copy source còn lại và build
 COPY . .
