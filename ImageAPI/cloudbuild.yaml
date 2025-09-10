@@ -1,0 +1,84 @@
+timeout: 1800s
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+substitutions:
+  _REGION: asia-southeast1              # Region cho Artifact Registry
+  _REPO: app                            # Tên repository trong Artifact Registry
+  _IMAGE: image-thumbnail-api           # Tên image
+  _SCAN_SEVERITY: HIGH,CRITICAL         # Fail build nếu có các mức này
+  _ARTIFACTS_BUCKET: "$PROJECT_ID-cloudbuild-artifacts"  # GCS bucket lưu báo cáo scan
+
+steps:
+  # 1) Build image từ Dockerfile trong thư mục ImageAPI (dùng BuildKit cho nhanh)
+  - name: asia.gcr.io/cloud-builders/docker
+    id: Build image
+    env:
+      - DOCKER_BUILDKIT=1
+    args:
+      - build
+      - -f
+      - ImageAPI/Dockerfile
+      - -t
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:image-thumbnail-api
+      - ImageAPI
+
+  # 2) Push image tag theo commit SHA lên Artifact Registry
+  - name: asia.gcr.io/cloud-builders/docker
+    id: Push SHA tag
+    args:
+      - push
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:image-thumbnail-api
+
+  # 3) Quét lỗ hổng với Trivy; fail nếu có HIGH/CRITICAL
+  - name: aquasec/trivy:0.54.1
+    id: Vulnerability scan (fail on HIGH/CRITICAL)
+    args:
+      - image
+      - --ignore-unfixed
+      - --exit-code
+      - "1"
+      - --severity
+      - HIGH
+      - --format
+      - sarif
+      - --output
+      - /workspace/trivy/report.sarif
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:image-thumbnail-api
+
+  # 4) (Không fail) Xuất tóm tắt dạng text
+  - name: aquasec/trivy:0.54.1
+    id: Vulnerability summary (text)
+    args:
+      - image
+      - --ignore-unfixed
+      - --exit-code
+      - "0"
+      - --severity
+      - LOW,MEDIUM,HIGH,CRITICAL
+      - --format
+      - table
+      - --output
+      - /workspace/trivy/summary.txt
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+
+  # 5) Nếu scan pass, gắn tag 'latest' và push
+  - name: gcr.io/cloud-builders/docker
+    id: Tag latest
+    args:
+      - tag
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+
+  - name: asia.gcr.io/cloud-builders/docker
+    id: Push latest
+    args:
+      - push
+      - asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/long.dao1907/image-thumbnail-api/image-thumbnail-api:latest
+
+artifacts:
+  objects:
+    location: gs://durable-sky-471008-q2-cloudbuild-artifact/image-thumbnail-api/
+    paths:
+      - trivy/report.sarif
+      - trivy/summary.txt
