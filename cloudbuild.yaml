@@ -101,7 +101,7 @@ steps:
       'deploy',
       '${_SERVICE_NAME}', # Tên service Cloud Run của bạn
       '--image',
-      '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}',
+      '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${SHORT_SHA}',
       '--region',
       '${_LOCATION}',
       '--platform',
