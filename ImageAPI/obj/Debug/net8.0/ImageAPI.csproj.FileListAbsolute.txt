@@ -372,3 +372,13 @@ C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\
 C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\ImageAPI.pdb
 C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\ImageAPI.genruntimeconfig.cache
 C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\ref\ImageAPI.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Google.Api.CommonProtos.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Google.Api.Gax.Grpc.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Google.Cloud.Iam.V1.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Google.Cloud.Location.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Google.Cloud.SecretManager.V1.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Google.Protobuf.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Grpc.Auth.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Grpc.Core.Api.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Grpc.Net.Client.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\Grpc.Net.Common.dll

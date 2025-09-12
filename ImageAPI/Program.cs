@@ -1,4 +1,5 @@
 using AutoMapper;
+using Google.Cloud.SecretManager.V1;
 using ImageAPI;
 using ImageAPI.Core.Application.Interfaces;
 using ImageAPI.Core.Application.Services;
@@ -13,12 +14,35 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Add services to the container.
-
 // Configure EF Core with PostgreSQL
+string projectId = builder.Configuration.GetSection("Gcp").GetValue<string>("ProjectID") ?? throw new ArgumentNullException("Gcp Project ID not configured.");
+string secretId = builder.Configuration.GetSection("Gcp").GetValue<string>("SecretID") ?? throw new ArgumentNullException("Gcp Secret ID not configured.");
+string jwtSecret = builder.Configuration.GetSection("Gcp").GetValue<string>("JWTSecretKey") ?? throw new ArgumentNullException("Gcp JWTSecretKey not configured.");
+string secretVersion = builder.Configuration.GetSection("Gcp").GetValue<string>("SecretVersion") ?? throw new ArgumentNullException("Gcp Secret Version not configured.");
+
+//Init Secret Manager Client
+SecretManagerServiceClient client = await SecretManagerServiceClient.CreateAsync();
+
+//get the secret value for database connection
+SecretVersionName secretVersionName = new(projectId, secretId, secretVersion);
+AccessSecretVersionResponse result = await client.AccessSecretVersionAsync(secretVersionName);
+string certContent = result.Payload.Data.ToStringUtf8();
+
+string tempCertPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.crt");
+await File.WriteAllTextAsync(tempCertPath, certContent);
+
+//get the secret value for JWT
+result = await client.AccessSecretVersionAsync(new SecretVersionName(projectId, jwtSecret, secretVersion));
+string jwtKey = result.Payload.Data.ToStringUtf8();
+
+
+//Prepare database connection string
+string baseConnection = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Default not configured.");
+baseConnection += $"Trust Server Certificate=false;Root Certificate={tempCertPath};";
+
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(baseConnection);
 
 });
 
@@ -60,7 +84,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-builder.AddAppAuthetication();
+builder.AddAppAuthetication(jwtKey);
 builder.Services.AddAuthorization();
 
 
@@ -68,11 +92,11 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // 2. Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 
@@ -82,7 +106,7 @@ app.UseAuthorization();
 
 
 app.MapControllers();
-app.MapGet("/health", () => "OK"); 
+app.MapGet("/health", () => "OK");
 ApplyMigrations();
 app.Run();
 
@@ -96,6 +120,7 @@ void ApplyMigrations()
         {
             dbContext.Database.Migrate();
         }
-    };
-    
+    }
+    ;
+
 }

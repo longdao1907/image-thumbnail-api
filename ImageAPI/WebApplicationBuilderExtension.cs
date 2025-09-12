@@ -6,15 +6,14 @@ namespace ImageAPI
 {
     public static class WebApplicationBuilderExtension
     {
-        public static WebApplicationBuilder AddAppAuthetication(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddAppAuthetication(this WebApplicationBuilder builder, string jwtSecret)
         {
             var settingsSection = builder.Configuration.GetSection("ApiSettings");
 
-            var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
 
-            var key = Encoding.ASCII.GetBytes(secret);
+            var key = Encoding.ASCII.GetBytes(jwtSecret);
 
 
             builder.Services.AddAuthentication(x =>
