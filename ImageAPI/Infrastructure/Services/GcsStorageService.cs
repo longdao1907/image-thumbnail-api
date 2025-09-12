@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Auth.OAuth2;
+using Google.Cloud.SecretManager.V1;
 using Google.Cloud.Storage.V1;
 using ImageAPI.Core.Application.Interfaces;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
@@ -10,17 +11,29 @@ namespace ImageAPI.Infrastructure.Services
     {
         private readonly UrlSigner _urlSigner;
         private readonly string _bucketName;
-        private readonly string _credentialsPath;
-        private readonly string _folderOriginalImage;
+         private readonly string _folderOriginalImage;
         private readonly StorageClient _storageClient;
 
         public GcsStorageService(IConfiguration configuration)
         {
             _bucketName = configuration["Gcp:BucketName"] ?? throw new ArgumentNullException("GCP BucketName not configured.");
-            _credentialsPath = configuration["Gcp:ServiceAccountCredentialsPath"] ?? throw new ArgumentNullException("GCP ServiceAccountCredentialsPath not configured.");
             _folderOriginalImage = configuration["Gcp:OriginalImageFolder"] ?? throw new ArgumentNullException("GCP Folder Image not configured.");
             //Get Application Default Credentials
-            var credentials = GoogleCredential.FromFile(_credentialsPath);
+
+            // Configure EF Core with PostgreSQL
+            string projectId = configuration.GetSection("Gcp").GetValue<string>("ProjectID") ?? throw new ArgumentNullException("Gcp Project ID not configured.");
+            string sACredentialsKey = configuration.GetSection("Gcp").GetValue<string>("SACredentialsKey") ?? throw new ArgumentNullException("Gcp SACredentialsKey not configured.");
+            string secretVersion = configuration.GetSection("Gcp").GetValue<string>("SecretVersion") ?? throw new ArgumentNullException("Gcp Secret Version not configured.");
+
+            //Init Secret Manager Client
+            SecretManagerServiceClient client =  SecretManagerServiceClient.Create();
+
+            //get the secret value for database connection
+            SecretVersionName secretVersionName = new(projectId, sACredentialsKey, secretVersion);
+            AccessSecretVersionResponse result =  client.AccessSecretVersion(secretVersionName);
+            string credJson = result.Payload.Data.ToStringUtf8();
+
+            var credentials = GoogleCredential.FromJson(credJson);
 
             
             // This implicitly uses Application Default Credentials when running on Google Cloud.
