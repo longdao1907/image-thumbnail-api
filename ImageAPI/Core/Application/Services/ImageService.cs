@@ -27,17 +27,17 @@ public class ImageService : IImageService
         metadata = await _metadataRepository.AddAsync(metadata);
 
         var objectName = $"{metadata.Id}_{request.FileName}";
-   
+
 
         string uploadUrl = string.Empty;
 
-        if (request.OriginalImageFile != null || request.OriginalImageFile.Length > 0)
+        if (request.OriginalImageFile != null && request.OriginalImageFile.Length > 0)
         {
             var source = request.OriginalImageFile.OpenReadStream();
 
             metadata.GcsObjectName = await _storageService.UploadFileAsync(objectName, source, request.ContentType);
         }
-       
+
         await _metadataRepository.UpdateAsync(metadata);
 
         return _mapper.Map<ImageMetadataDto>(metadata);
@@ -54,7 +54,7 @@ public class ImageService : IImageService
         var images = await _metadataRepository.GetImages();
         return images.Select(img => _mapper.Map<ImageMetadataDto>(img)).OrderByDescending(i => i.UploadDate);
     }
-    
+
     public async Task UpdateImageAsync(UpdateThumbnailImageDto model)
     {
         var metadata = await _metadataRepository.GetByIdAsync(model.ImageId);
