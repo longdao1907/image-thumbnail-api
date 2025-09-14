@@ -39,9 +39,9 @@ namespace ImageAPI.Controllers
             }
             return _response;
 
-           
 
-           
+
+
         }
 
         [HttpGet]
@@ -57,8 +57,8 @@ namespace ImageAPI.Controllers
                     return _response;
                 }
 
-                var objList =  await _imageService.GetImagesForUserAsync(userId);
-                _response.Result = _mapper.Map<IEnumerable<ImageMetadataDto>>(objList); 
+                var objList = await _imageService.GetImagesForUserAsync(userId);
+                _response.Result = _mapper.Map<IEnumerable<ImageMetadataDto>>(objList);
 
             }
             catch (Exception ex)
@@ -82,7 +82,7 @@ namespace ImageAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.IsSuccess = false; 
+                _response.IsSuccess = false;
                 _response.Message = ex.Message;
             }
             return _response;
@@ -90,7 +90,7 @@ namespace ImageAPI.Controllers
 
         [HttpPut]
         [Route("update-image")]
-        public async Task<ResponseDto> Put(UpdateThumbnailImageDto request )
+        public async Task<ResponseDto> Put(UpdateThumbnailImageDto request)
         {
             try
             {
@@ -102,6 +102,22 @@ namespace ImageAPI.Controllers
                 _response.Message = ex.Message;
             }
             return _response;
+        }
+
+        [HttpGet]
+        [Route("download-thumbnail/{imageId}")]
+        public async Task<DownloadThumbnailDto> DownloadThumbnail(Guid imageId)
+        {
+            var destinationStream = new MemoryStream();
+            try
+            {
+                var downloadResult = await _imageService.DownloadThumbnailAsync(imageId, destinationStream);
+                return downloadResult;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error downloading thumbnail: " + ex.Message);
+            }
         }
     }
 }

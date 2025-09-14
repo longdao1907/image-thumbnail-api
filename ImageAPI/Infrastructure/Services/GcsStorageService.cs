@@ -11,13 +11,15 @@ namespace ImageAPI.Infrastructure.Services
     {
         private readonly UrlSigner _urlSigner;
         private readonly string _bucketName;
-         private readonly string _folderOriginalImage;
+        private readonly string _bucketThumbnailName;
+        private readonly string _folderOriginalImage;
         private readonly StorageClient _storageClient;
 
         public GcsStorageService(IConfiguration configuration)
         {
             _bucketName = configuration["Gcp:BucketName"] ?? throw new ArgumentNullException("GCP BucketName not configured.");
             _folderOriginalImage = configuration["Gcp:OriginalImageFolder"] ?? throw new ArgumentNullException("GCP Folder Image not configured.");
+            _bucketThumbnailName = configuration["Gcp:BucketThumbnailName"] ?? throw new ArgumentNullException("Gcp:BucketThumbnailName has not been setup");
             //Get Application Default Credentials
 
             // Configure EF Core with PostgreSQL
@@ -26,23 +28,21 @@ namespace ImageAPI.Infrastructure.Services
             string secretVersion = configuration.GetSection("Gcp").GetValue<string>("SecretVersion") ?? throw new ArgumentNullException("Gcp Secret Version not configured.");
 
             //Init Secret Manager Client
-            SecretManagerServiceClient client =  SecretManagerServiceClient.Create();
+            SecretManagerServiceClient client = SecretManagerServiceClient.Create();
 
             //get the secret value for database connection
             SecretVersionName secretVersionName = new(projectId, sACredentialsKey, secretVersion);
-            AccessSecretVersionResponse result =  client.AccessSecretVersion(secretVersionName);
+            AccessSecretVersionResponse result = client.AccessSecretVersion(secretVersionName);
             string credJson = result.Payload.Data.ToStringUtf8();
 
             var credentials = GoogleCredential.FromJson(credJson);
 
-            
+
             // This implicitly uses Application Default Credentials when running on Google Cloud.
             // For local development, ensure you have authenticated via 'gcloud auth application-default login'.
-            _urlSigner =  UrlSigner.FromCredential(credentials);
+            _urlSigner = UrlSigner.FromCredential(credentials);
             _storageClient = StorageClient.Create(credentials);
         }
-
-
 
         public async Task<string> GenerateUploadUrlAsync(string objectName, string contentType)
         {
@@ -70,6 +70,22 @@ namespace ImageAPI.Infrastructure.Services
             // Public URL pattern (works with PublicRead)
             return $"https://storage.googleapis.com/{_bucketName}/{objectName}";
             // Or: return uploaded.MediaLink; (requires auth sometimes)
+        }
+
+        public async Task<(Stream stream, string contentType, long? fileSize)> DownloadThumbnailFileAsync(string objectName, Stream destination)
+        {
+            try
+            {
+                var storageObject = _storageClient.GetObject(_bucketThumbnailName, objectName);
+                await _storageClient.DownloadObjectAsync(_bucketThumbnailName, objectName, destination);
+                destination.Position = 0; // Reset stream for reading
+
+                return (destination, storageObject.ContentType, (long?)storageObject.Size);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

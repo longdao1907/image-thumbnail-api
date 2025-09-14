@@ -67,6 +67,28 @@ public class ImageService : IImageService
 
     }
 
+    public async Task<DownloadThumbnailDto> DownloadThumbnailAsync(Guid imageId, Stream destination)
+    {
+        var metadata = await _metadataRepository.GetByIdAsync(imageId);
+        if (metadata == null || string.IsNullOrEmpty(metadata.ThumbnailUrl))
+        {
+            throw new ArgumentException("Thumbnail not found for the given imageId.");
+        }
+
+        await _storageService.DownloadThumbnailFileAsync(metadata.ThumbnailUrl, destination);
+        destination.Position = 0; // Reset stream position after download
+
+        return new DownloadThumbnailDto
+        {
+            ImageId = imageId,
+            ThumbnailStream = destination,
+            ContentType = metadata.ContentType,
+            FileSize = metadata.FileSize
+        };
+    }
+
+
+
 
 
 
