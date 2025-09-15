@@ -7,12 +7,13 @@ using ImageAPI.Infrastructure.Persistence;
 using ImageAPI.Infrastructure.Persistence.Repositories;
 using ImageAPI.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args); 
+var builder = WebApplication.CreateBuilder(args);
 
 // Configure EF Core with PostgreSQL
 string projectId = builder.Configuration.GetSection("Gcp").GetValue<string>("ProjectID") ?? throw new ArgumentNullException("Gcp Project ID not configured.");
@@ -85,7 +86,26 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 builder.AddAppAuthetication(jwtKey);
-builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    options.AddPolicy("ServiceOnly", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("token_type", "service"); // <-- Kiểm tra claim ở đây!
+    });
+    options.AddPolicy("Both", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        // Có thể yêu cầu claim không phải là service, hoặc một claim khác như "scope"
+        policy.RequireAssertion(context =>
+            !context.User.HasClaim(c => c.Type == "token_type" && c.Value == "service"));
+    });
+});
 
 
 

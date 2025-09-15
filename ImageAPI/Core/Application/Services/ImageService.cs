@@ -69,6 +69,8 @@ public class ImageService : IImageService
 
     public async Task<DownloadThumbnailDto> DownloadThumbnailAsync(Guid imageId, Stream destination)
     {
+        var downloadDto = new DownloadThumbnailDto();
+
         var metadata = await _metadataRepository.GetByIdAsync(imageId);
         if (metadata == null || string.IsNullOrEmpty(metadata.ThumbnailUrl))
         {
@@ -78,13 +80,20 @@ public class ImageService : IImageService
         await _storageService.DownloadThumbnailFileAsync(metadata.ThumbnailUrl, destination);
         destination.Position = 0; // Reset stream position after download
 
-        return new DownloadThumbnailDto
+        var fileExtension = Path.GetExtension(metadata.ThumbnailUrl);
+
+        downloadDto.ImageId = imageId;
+        downloadDto.ThumbnailStream = destination;
+        downloadDto.ContentType = fileExtension switch
         {
-            ImageId = imageId,
-            ThumbnailStream = destination,
-            ContentType = metadata.ContentType,
-            FileSize = metadata.FileSize
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            _ => "application/octet-stream",
         };
+        downloadDto.FileSize = destination.Length;
+
+        return downloadDto;
     }
 
 

@@ -9,7 +9,6 @@ namespace ImageAPI.Controllers
 {
     [ApiController]
     [Route("api/Image")]
-    [Authorize] // Protect all endpoints in this controller
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
@@ -25,6 +24,7 @@ namespace ImageAPI.Controllers
 
         [HttpPost]
         [Route("upload-request")]
+        [Authorize]
         public async Task<ResponseDto> Post([FromForm] ImageMetadataDto request)
         {
             try
@@ -39,13 +39,11 @@ namespace ImageAPI.Controllers
             }
             return _response;
 
-
-
-
         }
 
         [HttpGet]
         [Route("get-images-by-user/{userId}")]
+        [Authorize]
         public async Task<ResponseDto> GetUserImages(string userId)
         {
             try
@@ -73,6 +71,7 @@ namespace ImageAPI.Controllers
 
         [HttpGet]
         [Route("get-images")]
+        [Authorize]
         public async Task<ResponseDto> GetImages()
         {
             try
@@ -90,6 +89,7 @@ namespace ImageAPI.Controllers
 
         [HttpPut]
         [Route("update-image")]
+        [Authorize(Policy = "ServiceOnly")]
         public async Task<ResponseDto> Put(UpdateThumbnailImageDto request)
         {
             try
@@ -106,13 +106,14 @@ namespace ImageAPI.Controllers
 
         [HttpGet]
         [Route("download-thumbnail/{imageId}")]
-        public async Task<DownloadThumbnailDto> DownloadThumbnail(Guid imageId)
+        [Authorize]
+        public async Task<IActionResult> DownloadThumbnail(Guid imageId)
         {
             var destinationStream = new MemoryStream();
             try
             {
                 var downloadResult = await _imageService.DownloadThumbnailAsync(imageId, destinationStream);
-                return downloadResult;
+                return File(downloadResult.ThumbnailStream, downloadResult.ContentType, $"{imageId}_thumbnail.jpg");
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ImageAPI
@@ -13,23 +14,25 @@ namespace ImageAPI
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
 
-            var key = Encoding.ASCII.GetBytes(jwtSecret);
+            var key = Encoding.UTF8.GetBytes(jwtSecret);
 
 
             builder.Services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
+            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, x =>
             {
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
-                    ValidIssuer = issuer,
-                    ValidAudience = audience,
-                    ValidateAudience = true
+                    ValidIssuers = new[] { issuer, builder.Configuration.GetSection("ServiceTokenOptions").GetValue<string>("Issuer") },
+                    ValidAudiences = new[] { audience, builder.Configuration.GetSection("ServiceTokenOptions").GetValue<string>("Audience") },
+                    ValidateAudience = true,
+                    RequireExpirationTime = true,
+                    ClockSkew = TimeSpan.Zero,
                 };
             });
 
