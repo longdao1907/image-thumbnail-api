@@ -1,3 +1,14 @@
+apiVersion: apps/v1
+kind: ServiceAccount
+metadata: 
+  annotations: 
+    iam.gke.io/gcp-service-account: imgthumb-app-signer@durable-sky-471008-q2.iam.gserviceaccount.com
+  name: image-api-ksa
+
+
+
+---
+
 # API Version cho Deployment
 apiVersion: apps/v1
 # Loại đối tượng là Deployment
