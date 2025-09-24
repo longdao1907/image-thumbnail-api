@@ -26,6 +26,7 @@ SecretManagerServiceClient client = await SecretManagerServiceClient.CreateAsync
 
 //get the secret value for database connection
 SecretVersionName secretVersionName = new(projectId, secretId, secretVersion);
+Console.WriteLine($"Attempting to access secret: '{secretId}' in project: '{projectId}' version: '{secretVersion}'");
 AccessSecretVersionResponse result = await client.AccessSecretVersionAsync(secretVersionName);
 string certContent = result.Payload.Data.ToStringUtf8();
 
