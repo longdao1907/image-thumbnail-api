@@ -381,3 +381,5 @@ c:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\
 C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\ImageAPI.genruntimeconfig.cache
 C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\ImageAPI.pdb
 C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\obj\Debug\net8.0\ref\ImageAPI.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\SharedLib.dll
+C:\Users\letin\OneDrive\Documents\image-thumbnail-api\ImageAPI\bin\Debug\net8.0\SharedLib.pdb
