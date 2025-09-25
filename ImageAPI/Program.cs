@@ -23,11 +23,21 @@ string secretVersion = builder.Configuration.GetSection("Gcp").GetValue<string>(
 
 //Init Secret Manager Client
 SecretManagerServiceClient client = await SecretManagerServiceClient.CreateAsync();
-
+AccessSecretVersionResponse result = new AccessSecretVersionResponse();
 //get the secret value for database connection
+
 SecretVersionName secretVersionName = new(projectId, secretId, secretVersion);
-Console.Error.WriteLine($"Attempting to access secret: '{secretId}' in project: '{projectId}' version: '{secretVersion}'");
-AccessSecretVersionResponse result = await client.AccessSecretVersionAsync(secretVersionName);
+try
+{
+    Console.WriteLine($"Attempting to access secret: '{secretId}' in project: '{projectId}' version: '{secretVersion}'");
+    result = await client.AccessSecretVersionAsync(secretVersionName);
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"Error accessing secret: {ex.Message}");
+    throw;
+}
+
 string certContent = result.Payload.Data.ToStringUtf8();
 
 string tempCertPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.crt");
