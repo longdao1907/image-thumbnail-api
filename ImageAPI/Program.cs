@@ -145,7 +145,18 @@ string GetGoogleCredentials()
 
     //Init Secret Manager Client
     var defaultCredential = GoogleCredential.GetApplicationDefault();
-    Console.WriteLine(defaultCredential);
+    string accountEmail = "Unknown";
+    if (defaultCredential.UnderlyingCredential is ServiceAccountCredential sac)
+    {
+        accountEmail = sac.Id; // Lấy email của Service Account
+    }
+    else if (defaultCredential.UnderlyingCredential is UserCredential uc)
+    {
+        accountEmail = uc.UserId; // Lấy email của người dùng gcloud
+    }
+    Console.WriteLine($"SUCCESS :: ADC is using account: [{accountEmail}]");
+
+
     SecretManagerServiceClient client = new SecretManagerServiceClientBuilder { Credential = defaultCredential }.Build();
 
     AccessSecretVersionResponse result = client.AccessSecretVersion(new SecretVersionName(projectId, gcpCredentialsSecret, secretVersion));
