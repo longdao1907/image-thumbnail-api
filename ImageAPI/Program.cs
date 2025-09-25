@@ -145,6 +145,7 @@ string GetGoogleCredentials()
 
     //Init Secret Manager Client
     var defaultCredential = GoogleCredential.GetApplicationDefault();
+    Console.WriteLine(defaultCredential);
     SecretManagerServiceClient client = new SecretManagerServiceClientBuilder { Credential = defaultCredential }.Build();
 
     AccessSecretVersionResponse result = client.AccessSecretVersion(new SecretVersionName(projectId, gcpCredentialsSecret, secretVersion));
