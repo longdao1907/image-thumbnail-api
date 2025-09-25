@@ -40,7 +40,7 @@ spec:
         # === PHẦN QUAN TRỌNG NHẤT ===
         # Đây là đường dẫn đầy đủ đến image của bạn trong Artifact Registry.
         # Bạn cần thay thế YOUR_PROJECT_ID và YOUR_TAG cho đúng.
-        image: asia-southeast1-docker.pkg.dev/durable-sky-471008-q2/app/image-thumbnail-api:latest
+        image: gcr.io/durable-sky-471008-q2/github.com/longdao1907/image-thumbnail-api:latest
         # securityContext:
           # runAsUser: 0  # UID 0 là của người dùng root
         # command: ["/bin/sh", "-c"]
