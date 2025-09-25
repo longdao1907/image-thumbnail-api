@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj": {}
+    "c:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj": {
+    "c:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj",
+        "projectUniqueName": "c:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj",
         "projectName": "SharedLib",
-        "projectPath": "C:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj",
+        "projectPath": "c:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj",
         "packagesPath": "C:\\Users\\letin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\obj\\",
+        "outputPath": "c:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -83,14 +83,14 @@
         }
       }
     },
-    "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj": {
+    "c:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj",
+        "projectUniqueName": "c:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj",
         "projectName": "ImageAPI",
-        "projectPath": "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj",
+        "projectPath": "c:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\ImageAPI.csproj",
         "packagesPath": "C:\\Users\\letin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\obj\\",
+        "outputPath": "c:\\Users\\letin\\OneDrive\\Documents\\image-thumbnail-api\\ImageAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -111,8 +111,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj": {
-                "projectPath": "C:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj"
+              "c:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj": {
+                "projectPath": "c:\\Users\\letin\\OneDrive\\Documents\\Dummy\\SharedLib\\SharedLib.csproj"
               }
             }
           }

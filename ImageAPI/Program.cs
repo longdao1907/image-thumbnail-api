@@ -17,10 +17,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var credentialJson = GetGoogleCredentials();
-var credential = GoogleCredential.FromJson(credentialJson);
-SecretManagerServiceClient client = new SecretManagerServiceClientBuilder { Credential = credential }.Build();
 
+SecretManagerServiceClient client = SecretManagerServiceClient.Create();
 var tempCertPath = GetTempPath();
 var certContent = GetCertContent(client);
 string jwtKey = GetJwtKey(client);
@@ -135,33 +133,6 @@ string GetJwtKey(SecretManagerServiceClient client)
     AccessSecretVersionResponse result = client.AccessSecretVersion(new SecretVersionName(projectId, jwtSecret, secretVersion));
     string jwtKey = result.Payload.Data.ToStringUtf8();
     return jwtKey;
-}
-
-string GetGoogleCredentials()
-{
-    string projectId = builder.Configuration.GetSection("Gcp").GetValue<string>("ProjectID") ?? throw new ArgumentNullException("Gcp Project ID not configured.");
-    string gcpCredentialsSecret = builder.Configuration.GetSection("Gcp").GetValue<string>("SACredentialsKey") ?? throw new ArgumentNullException("Gcp SACredentialsKey not configured.");
-    string secretVersion = builder.Configuration.GetSection("Gcp").GetValue<string>("SecretVersion") ?? throw new ArgumentNullException("Gcp Secret Version not configured.");
-
-    //Init Secret Manager Client
-    var defaultCredential = GoogleCredential.GetApplicationDefault();
-    string accountEmail = "Unknown";
-    if (defaultCredential.UnderlyingCredential is ServiceAccountCredential sac)
-    {
-        accountEmail = sac.Id; // Lấy email của Service Account
-    }
-    else if (defaultCredential.UnderlyingCredential is UserCredential uc)
-    {
-        accountEmail = uc.UserId; // Lấy email của người dùng gcloud
-    }
-    Console.WriteLine($"SUCCESS :: ADC is using account: [{accountEmail}]");
-
-
-    SecretManagerServiceClient client = new SecretManagerServiceClientBuilder { Credential = defaultCredential }.Build();
-
-    AccessSecretVersionResponse result = client.AccessSecretVersion(new SecretVersionName(projectId, gcpCredentialsSecret, secretVersion));
-    string gcpCredentials = result.Payload.Data.ToStringUtf8();
-    return gcpCredentials;
 }
 
 string GetCertContent(SecretManagerServiceClient client)
