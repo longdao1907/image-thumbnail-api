@@ -144,7 +144,8 @@ string GetGoogleCredentials()
     string secretVersion = builder.Configuration.GetSection("Gcp").GetValue<string>("SecretVersion") ?? throw new ArgumentNullException("Gcp Secret Version not configured.");
 
     //Init Secret Manager Client
-    SecretManagerServiceClient client = SecretManagerServiceClient.Create();
+    var defaultCredential = GoogleCredential.GetApplicationDefault();
+    SecretManagerServiceClient client = new SecretManagerServiceClientBuilder { Credential = defaultCredential }.Build();
 
     AccessSecretVersionResponse result = client.AccessSecretVersion(new SecretVersionName(projectId, gcpCredentialsSecret, secretVersion));
     string gcpCredentials = result.Payload.Data.ToStringUtf8();

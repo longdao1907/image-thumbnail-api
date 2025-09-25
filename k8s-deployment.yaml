@@ -40,7 +40,7 @@ spec:
         # === PHẦN QUAN TRỌNG NHẤT ===
         # Đây là đường dẫn đầy đủ đến image của bạn trong Artifact Registry.
         # Bạn cần thay thế YOUR_PROJECT_ID và YOUR_TAG cho đúng.
-        image: gcr.io/durable-sky-471008-q2/github.com/longdao1907/image-thumbnail-api:latest
+        image: gcr.io/durable-sky-471008-q2/github.com/longdao1907/image-thumbnail-api:1e820c0e0ce6957f5b8b3507d1044853aa50db04
         # securityContext:
           # runAsUser: 0  # UID 0 là của người dùng root
         # command: ["/bin/sh", "-c"]
